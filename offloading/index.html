@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HTTP Offloading Test</title>
+  <style>
+    :root {
+      --bg: #f4f6f8;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --primary: #d71920;
+      --success: #16a34a;
+      --shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+      --radius: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, #f8fafc 0%, var(--bg) 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .page {
+      width: min(1100px, 94vw);
+      margin: 0 auto;
+      padding: 18px 0 28px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand img {
+      width: 120px;
+      height: 32px;
+      object-fit: contain;
+      background: white;
+      border-radius: 8px;
+      padding: 4px 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    .brand-title h1 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.2;
+    }
+
+    .brand-title p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      border-radius: 999px;
+      box-shadow: var(--shadow);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.12);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .card-header h2 {
+      margin: 0;
+      font-size: 15px;
+    }
+
+    .card-header span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .info-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .info-table tr:not(:last-child) {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .info-table td {
+      padding: 8px 16px;
+      vertical-align: top;
+      font-size: 13px;
+    }
+
+    .info-table td:first-child {
+      width: 32%;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .info-value {
+      font-family: Consolas, Monaco, monospace;
+      word-break: break-word;
+    }
+
+    .cards-compact {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .rewrite-marker {
+      margin-top: 14px;
+      padding: 16px 18px;
+      border: 2px dashed var(--primary);
+      border-radius: var(--radius);
+      background: #fff5f5;
+      box-shadow: var(--shadow);
+    }
+
+    .rewrite-marker h2 {
+      margin: 0 0 6px;
+      font-size: 15px;
+    }
+
+    .rewrite-marker-code {
+      display: inline-block;
+      margin-top: 6px;
+      padding: 6px 10px;
+      border-radius: 10px;
+      background: #1f2937;
+      color: #ffffff;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+    }
+
+    .footer {
+      margin-top: 28px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 820px) {
+      .header,
+      .cards-compact {
+        grid-template-columns: 1fr;
+      }
+
+      .header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .status-pill {
+        white-space: normal;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="header">
+      <div class="brand">
+        <img src="../images/rad.jpg" alt="Radware" />
+        <div class="brand-title">
+          <h1>HTTP Offloading Test</h1>
+          <p>Static HTML validation page for ADC body rewrite testing</p>
+        </div>
+      </div>
+      <div class="status-pill">
+        <span class="status-dot"></span>
+        <span>Served by Apache</span>
+      </div>
+    </header>
+
+    <section class="grid">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2>Connection Details</h2>
+            <span>Static reference values for offloading validation</span>
+          </div>
+        </div>
+        <table class="info-table">
+          <tr><td>Protocol Version</td><td class="info-value">HTTP/1.1</td></tr>
+          <tr><td>Page Type</td><td class="info-value">Static HTML</td></tr>
+          <tr><td>Purpose</td><td class="info-value">ADC body content modification test</td></tr>
+          <tr><td>Document Path</td><td class="info-value">/offloading/index.html</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <div class="cards-compact">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2>Request Profile</h2>
+            <span>Expected for a plain static-file response</span>
+          </div>
+        </div>
+        <table class="info-table">
+          <tr><td>Compression</td><td class="info-value">Disabled on root only; this page may still be static</td></tr>
+          <tr><td>Server-side Logic</td><td class="info-value">None</td></tr>
+          <tr><td>Rendering</td><td class="info-value">Pure HTML and CSS only</td></tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2>Rewrite Target</h2>
+            <span>Use one exact unique token</span>
+          </div>
+        </div>
+        <table class="info-table">
+          <tr><td>Suggested Match</td><td class="info-value">ADC_TEST_APACHE</td></tr>
+          <tr><td>Suggested Replace</td><td class="info-value">ADC_TEST_ALTEON</td></tr>
+          <tr><td>Match Count</td><td class="info-value">1</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <section class="rewrite-marker" aria-label="ADC rewrite test marker">
+      <h2>ADC Rewrite Test</h2>
+      <p>This page is intentionally static so Alteon can modify the body without PHP execution differences.</p>
+      <div class="rewrite-marker-code">ADC_TEST_APACHE</div>
+    </section>
+
+    <p class="footer">Served by Apache</p>
+  </main>
+</body>
+</html>

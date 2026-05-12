@@ -452,7 +452,7 @@
     <section class="rewrite-marker" aria-label="ADC rewrite test marker">
       <h2>ADC Rewrite Test</h2>
       <p>This marker is intentionally static for body-rewrite validation.</p>
-      <div class="rewrite-marker-code">Apache</div>
+      <div class="rewrite-marker-code">ADC_TEST_APACHE</div>
     </section>
 
     <details>
