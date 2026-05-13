@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Web Info</title>
+  <title>Server Webpage</title>
   <style>
     :root {
-      --bg: #f4f6f8;
+      --bg: #d7dee8;
       --card: #ffffff;
       --text: #1f2937;
       --muted: #6b7280;
@@ -27,7 +27,7 @@
     body {
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
-      background: linear-gradient(135deg, #f8fafc 0%, var(--bg) 100%);
+      background: linear-gradient(135deg, #eef2f7 0%, var(--bg) 100%);
       color: var(--text);
       min-height: 100vh;
     }
@@ -35,41 +35,38 @@
     .page {
       width: min(1100px, 94vw);
       margin: 0 auto;
-      padding: 18px 0 28px;
+      padding: 10px 0 28px;
     }
 
     .header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 16px;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .header-side {
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 16px;
-    }
-
-    .brand img {
-      width: 120px;
-      height: 32px;
-      object-fit: contain;
-      background: white;
-      border-radius: 8px;
-      padding: 4px 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+      gap: 12px;
+      min-width: 0;
     }
 
     .brand-title h1 {
       margin: 0;
-      font-size: 20px;
-      line-height: 1.2;
+      font-size: 22px;
+      line-height: 1.1;
     }
 
     .brand-title p {
-      margin: 4px 0 0;
+      margin: 2px 0 0;
       color: var(--muted);
       font-size: 12px;
     }
@@ -77,22 +74,43 @@
     .status-pill {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 7px 10px;
+      gap: 6px;
+      padding: 5px 8px;
       border: 1px solid var(--border);
       background: var(--card);
       border-radius: 999px;
-      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
-      font-size: 12px;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+      font-size: 11px;
+      line-height: 1;
       white-space: nowrap;
     }
 
     .status-dot {
-      width: 10px;
-      height: 10px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
       background: var(--success);
-      box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.12);
+      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+    }
+
+    .server-badge {
+      width: 78px;
+      height: 78px;
+      border-radius: 50%;
+      border: 2px solid rgba(47, 111, 216, 0.22);
+      background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.96), rgba(235, 244, 255, 0.88));
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 18px rgba(47, 111, 216, 0.08);
+      flex-shrink: 0;
+    }
+
+    .server-badge img {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+      display: block;
     }
 
     .grid {
@@ -235,6 +253,37 @@
       box-shadow: var(--shadow);
     }
 
+    .browser-probe {
+      margin-top: 14px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .browser-probe summary {
+      padding: 14px 16px;
+      border-bottom: 1px solid transparent;
+    }
+
+    .browser-probe[open] summary {
+      border-bottom-color: var(--border);
+    }
+
+    .browser-probe-copy {
+      padding: 12px 16px 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .browser-probe-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      padding: 14px 16px 16px;
+    }
+
     .rewrite-marker h2 {
       margin: 0 0 6px;
       font-size: 15px;
@@ -295,7 +344,8 @@
     @media (max-width: 820px) {
       .header,
       .grid,
-      .cards-compact {
+      .cards-compact,
+      .browser-probe-grid {
         grid-template-columns: 1fr;
       }
 
@@ -304,13 +354,43 @@
         flex-direction: column;
       }
 
+      .brand {
+        width: auto;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .header-side {
+        width: auto;
+        align-self: flex-start;
+      }
+
       .status-pill {
         white-space: normal;
+      }
+
+      .brand-title h1 {
+        font-size: 18px;
+      }
+
+      .brand-title p {
+        font-size: 11px;
+      }
+
+      .server-badge {
+        width: 64px;
+        height: 64px;
+      }
+
+      .server-badge img {
+        width: 36px;
+        height: 36px;
       }
     }
   </style>
 </head>
-<body onload="ProtocolVer();">
+<body onload="InitPage();">
   <?php
     function randStr($length = 20) {
       $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -326,15 +406,19 @@
   <main class="page">
     <header class="header">
       <div class="brand">
-        <img src="images/rad.jpg" alt="Radware" />
+        <div class="server-badge" aria-hidden="true">
+          <img src="images/servers.png" alt="" />
+        </div>
         <div class="brand-title">
-          <h1>TCP/IP Web Info</h1>
-          <p>Traffic visibility dashboard</p>
+          <h1>Server Webpage</h1>
+          <p>Server visibility dashboard</p>
         </div>
       </div>
-      <div class="status-pill">
-        <span class="status-dot"></span>
-        <span>Served by Apache</span>
+      <div class="header-side">
+        <div class="status-pill">
+          <span class="status-dot"></span>
+          <span>Served by Apache</span>
+        </div>
       </div>
     </header>
 
@@ -449,6 +533,56 @@
     </div>
     </div>
 
+    <details class="browser-probe">
+      <summary>Browser Client Perspective</summary>
+      <div class="browser-probe-copy">
+        These values reflect a browser probe request made after page load. They show the browser/client perspective for the probe, not the original page navigation.
+      </div>
+      <div class="browser-probe-grid">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2>Browser Perspective - General</h2>
+              <span>Browser and backend-observed probe metadata</span>
+            </div>
+          </div>
+          <div class="headers-wrap">
+            <table class="info-table" id="browser-general-table">
+              <tr><td>Status</td><td class="info-value">Loading...</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2>Browser Perspective - Request Headers</h2>
+              <span>Headers the server received for the browser probe</span>
+            </div>
+          </div>
+          <div class="headers-wrap">
+            <table class="info-table" id="browser-request-headers-table">
+              <tr><td>Status</td><td class="info-value">Loading...</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2>Browser Perspective - Response Headers</h2>
+              <span>Headers exposed to browser JavaScript for the probe response</span>
+            </div>
+          </div>
+          <div class="headers-wrap">
+            <table class="info-table" id="browser-response-headers-table">
+              <tr><td>Status</td><td class="info-value">Loading...</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </details>
+
     <section class="rewrite-marker" aria-label="ADC rewrite test marker">
       <h2>ADC Rewrite Test</h2>
       <p>This marker is intentionally static for body-rewrite validation.</p>
@@ -468,10 +602,80 @@
   </main>
 
   <script>
+    function setProbeTableRows(tableId, rows, emptyMessage) {
+      const table = document.getElementById(tableId);
+      if (!table) return;
+
+      table.innerHTML = '';
+
+      if (!rows.length) {
+        table.innerHTML = `<tr><td>Status</td><td class="info-value">${emptyMessage}</td></tr>`;
+        return;
+      }
+
+      rows.forEach(([name, value]) => {
+        const row = document.createElement('tr');
+        const nameCell = document.createElement('td');
+        const valueCell = document.createElement('td');
+        nameCell.textContent = name;
+        valueCell.className = 'info-value';
+        valueCell.textContent = value;
+        row.appendChild(nameCell);
+        row.appendChild(valueCell);
+        table.appendChild(row);
+      });
+    }
+
     function ProtocolVer() {
       const protocolElement = document.getElementById("ProtocolVer");
       const navEntry = performance.getEntriesByType("navigation")[0] || performance.getEntries()[0];
       protocolElement.innerHTML = navEntry && navEntry.nextHopProtocol ? navEntry.nextHopProtocol : "Unavailable";
+    }
+
+    async function LoadBrowserPerspective() {
+      try {
+        const probeUrl = `browser_probe.php?ts=${Date.now()}`;
+        const response = await fetch(probeUrl, {
+          method: 'GET',
+          cache: 'no-store',
+          credentials: 'same-origin'
+        });
+
+        const data = await response.json();
+        const navEntry = performance.getEntriesByType("navigation")[0] || performance.getEntries()[0];
+        const generalRows = [
+          ['Request URL', response.url || data.request_url || probeUrl],
+          ['Request Method', data.request_method || 'GET'],
+          ['Status Code', `${response.status} ${response.statusText}`.trim()],
+          ['Protocol', navEntry && navEntry.nextHopProtocol ? navEntry.nextHopProtocol : 'Unavailable'],
+          ['Remote Address (backend view)', data.remote_addr || 'Unavailable'],
+          ['Remote Port (backend view)', data.remote_port || 'Unavailable']
+        ];
+
+        if (document.referrerPolicy) {
+          generalRows.push(['Referrer Policy', document.referrerPolicy]);
+        }
+
+        const requestRows = Object.entries(data.request_headers || {});
+        const responseRows = [];
+        response.headers.forEach((value, name) => {
+          responseRows.push([name, value]);
+        });
+
+        setProbeTableRows('browser-general-table', generalRows, 'No browser metadata available');
+        setProbeTableRows('browser-request-headers-table', requestRows, 'No request headers available');
+        setProbeTableRows('browser-response-headers-table', responseRows, 'No response headers available');
+      } catch (error) {
+        const message = `Probe failed: ${error}`;
+        setProbeTableRows('browser-general-table', [], message);
+        setProbeTableRows('browser-request-headers-table', [], message);
+        setProbeTableRows('browser-response-headers-table', [], message);
+      }
+    }
+
+    function InitPage() {
+      ProtocolVer();
+      LoadBrowserPerspective();
     }
   </script>
 </body>
